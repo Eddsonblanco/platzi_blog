@@ -2,61 +2,33 @@ import React, { Component } from 'react';
 import { connect  } from 'react-redux'
 import * as usersActions from '../../usersActions'
 import Spinner from '../../../general/Spinner';
+import Fatal from '../../../general/Fatal';
+import Table from './table'
 
 
 class users extends Component {
 
   componentDidMount() {
-    this.props.getAll();
+    if(!this.props.users.length){
+      this.props.getAll()
+  }
   }
 
   displayContent = () => {
     if (this.props.loading) {
-      return <Spinner/>
+      return <Spinner />;
     }
-    return(
-      <table className='table' >
-      <thead>
-        <tr>
-          <th>
-            Name
-          </th>
-          <th>
-            Email
-          </th>
-          <th>
-            Link
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        { this.createRow()}
-      </tbody>
-    </table>
-    )
-
-  }
-
-
-createRow = () =>(
-  this.props.users.map((users) =>(
-    <tr key={users.id}>
-      <td>
-        {users.name}
-      </td>
-      <td>
-        {users.email}
-      </td>
-      <td>
-        {users.website}
-      </td>
-    </tr>
-  ))
-);
+    if (this.props.error) {
+      return < Fatal message={ this.props.error} />;
+    }
+    return < Table />;
+    }
+    
 
   render(){
     return(
       <div>
+        <h1>Users</h1>
         {this.displayContent()}
       </div>  
     );

@@ -7,16 +7,16 @@ export const getAll = () => async ( dispatch ) =>{
         type: LOADING
     })
     try {
-        const response = await axios.get('https://jsonplaceholder.typicode.com/users');
+        const {data} = await axios.get('https://jsonplaceholder.typicode.com/users');
         dispatch({
             type: GET_ALL,
-            payload: response.data
+            payload: data
         })
     } catch (error) {
         console.log('Error: ', error.message)
         dispatch({
             type: ERROR,
-            payload: error.message
+            payload: 'something went wrong, try later'
         })
         
     }

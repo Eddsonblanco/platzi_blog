@@ -53,6 +53,46 @@ class Posts  extends Component {
         return(
         <h1>Post by { name }</h1>
         )
+    };
+
+    writePosts = () => {
+        const {
+            usersReducers,
+            usersReducers: { users },
+            postsReducers,
+            postsReducers: { posts },
+            match: { params: { key } }
+        } = this.props;
+
+        if (!users.length) return;
+        if (usersReducers.error) return;
+
+        if (postsReducers.Loading){
+            return <Loading />
+        }
+        if ( postsReducers.error ){
+            return <Fatal message={ postsReducers.error } />
+        }
+        if (!posts.length) return;
+        if (!('posts_key' in users[key])) return;
+        const { posts_key } =users[key];
+        
+    return posts[posts_key].map((posts) => (
+
+        <div className='post_title '>
+            <h2>
+                { posts.title }
+            </h2>
+            <h4>
+                { posts.body }
+            </h4>
+        </div>
+
+
+
+    ))
+
+       
     }
 
 
@@ -63,8 +103,8 @@ class Posts  extends Component {
         console.log(this.props)
         return (
             <div>
-                { this.props.match.params.key }
                 { this.writeUser() } 
+                { this.writePosts() }
             </div>
                
         )

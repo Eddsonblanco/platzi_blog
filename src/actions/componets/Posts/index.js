@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
+import Loading from '../../../general/Spinner'
+import Fatal from '../../../general/Fatal'
+
 import * as usersActions from '../../usersActions'
 import * as postsActions from '../../postsAction'
+
 
 const { getAll: usersGetAll } = usersActions;
 const { getByUser: getAllPostsByUser } = postsActions;
@@ -9,10 +13,46 @@ const { getByUser: getAllPostsByUser } = postsActions;
 class Posts  extends Component {
 
     async componentDidMount(){
-        if(!this.props.usersReducers.users.length){
-            await this.props.usersGetAll()
+        const {
+            usersGetAll,
+            getAllPostsByUser,
+            match:{ params: { key } }
+        } = this.props;
+
+        if ( !this.props.usersReducers.users.length ){
+            await usersGetAll();
         }
-        this.props.getAllPostsByUser(this.props.match.params.key)
+        if(this.props.usersReducers.error){
+            return;
+        }
+        if ( !('posts_key' in this.props.usersReducers.users[key])) {
+            getAllPostsByUser(key);
+        }
+
+        
+        
+    }
+
+    writeUser = () => {
+        const {
+            usersReducers,
+            match: { params: { key } }
+        } = this.props;
+
+        if( usersReducers.error ){
+            return <Fatal message={ usersReducers.error } />
+        }
+
+        if(!usersReducers.users.length || usersReducers.Loading ){
+            return <Loading />
+        }
+        
+        const name = usersReducers.users[key].name;
+
+
+        return(
+        <h1>Post by { name }</h1>
+        )
     }
 
 
@@ -22,15 +62,16 @@ class Posts  extends Component {
     render() {
         console.log(this.props)
         return (
-           
             <div>
-                <h1>Post from</h1>
-                { this.props.match.params.key } 
+                { this.props.match.params.key }
+                { this.writeUser() } 
             </div>
                
         )
     }
 }
+
+
 
 const mapStateProps = ({ postsReducers, usersReducers }) => {
     return{
@@ -43,5 +84,8 @@ const mapDispatchToProps = {
     usersGetAll,
     getAllPostsByUser
 }
+
+
+
 
 export default connect (mapStateProps, mapDispatchToProps) (Posts);

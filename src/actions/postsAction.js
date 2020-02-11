@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GET_ALL_POST_BY_USER, LOADING } from '../types/postsType'
+import { UPDATE, LOADING } from '../types/postsType'
 import * as usersTypes from '../types/usersTypes'
 
 
@@ -30,7 +30,7 @@ export const getByUser = (key) => async (dispatch, getState) =>{
                 news
         ]
         dispatch({
-            type:GET_ALL_POST_BY_USER,
+            type:UPDATE,
             payload: updatedPosts
         })
 
@@ -61,6 +61,27 @@ export const getByUser = (key) => async (dispatch, getState) =>{
 
 }
 
-export const openAndClose = (posts_key, comment_key) =>  (dispatch) =>{
-    console.log(posts_key, comment_key)
+export const openAndClose = (posts_key, comment_key) =>  (dispatch, getState) =>{
+    const { posts } = getState().postsReducers;
+    const selected = posts[posts_key][comment_key];
+
+    const selectedUpdated = {
+        ...selected,
+        open: !selected.open
+    };
+
+    const updatedPosts = [ ...posts];
+    updatedPosts[posts_key] = [
+        ...posts[posts_key]
+    ];
+    updatedPosts[posts_key][comment_key ] = selectedUpdated
+    
+    dispatch({
+        type:UPDATE,
+        payload: updatedPosts
+    })
+}
+
+export const getComments = ( posts_key, comment_key ) => (dispatch, getState) => {
+    
 }

@@ -79,7 +79,10 @@ class Posts  extends Component {
         
     return posts[posts_key].map((posts) => (
 
-        <div className='post_title '>
+        <div
+        className='post_title'
+        key={ posts.id }
+        >
             <h2>
                 { posts.title }
             </h2>

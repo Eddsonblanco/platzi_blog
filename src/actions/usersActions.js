@@ -16,7 +16,7 @@ export const getAll = () => async ( dispatch ) =>{
         console.log('Error: ', error.message)
         dispatch({
             type: ERROR,
-            payload: 'something went wrong, try later'
+            payload: 'user info no available'
         })
         
     }

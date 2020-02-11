@@ -8,7 +8,7 @@ import * as postsActions from '../../postsAction'
 
 
 const { getAll: usersGetAll } = usersActions;
-const { getByUser: getAllPostsByUser } = postsActions;
+const { getByUser: getAllPostsByUser, openAndClose } = postsActions;
 
 class Posts  extends Component {
 
@@ -77,30 +77,20 @@ class Posts  extends Component {
         if (!('posts_key' in users[key])) return;
         const { posts_key } =users[key];
         
-    return posts[posts_key].map((posts) => (
+    return this.newMethod(posts, posts_key);
+};
 
-        <div
-        className='post_title'
-        key={ posts.id }
-        >
+
+    newMethod(posts, posts_key) {
+        return posts[posts_key].map((posts, comment_key) => (<div className='post_title' key={posts.id} onClick={() => this.props.openAndClose(posts_key, comment_key)}>
             <h2>
-                { posts.title }
+                {posts.title}
             </h2>
             <h4>
-                { posts.body }
+                {posts.body}
             </h4>
-        </div>
-
-
-
-    ))
-
-       
+        </div>));
     }
-
-
-
-
 
     render() {
         console.log(this.props)
@@ -125,7 +115,8 @@ const mapStateProps = ({ postsReducers, usersReducers }) => {
 
 const mapDispatchToProps = {
     usersGetAll,
-    getAllPostsByUser
+    getAllPostsByUser,
+    openAndClose
 }
 
 

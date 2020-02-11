@@ -17,11 +17,17 @@ export const getByUser = (key) => async (dispatch, getState) =>{
     const user_id = users[key].id;
 
     try {
-        const {data} = await axios.get(`https://jsooooonplaceholder.typicode.com/posts?userId=${user_id}`);
+        const {data} = await axios.get(`https://jsonplaceholder.typicode.com/posts?userId=${user_id}`);
+
+        const news = data.map((posts) => ({
+            ...posts,
+            comments:[],
+            open: false
+        }))
 
         const updatedPosts = [
             ...posts,
-                data
+                news
         ]
         dispatch({
             type:GET_ALL_POST_BY_USER,
@@ -53,4 +59,8 @@ export const getByUser = (key) => async (dispatch, getState) =>{
 
     
 
+}
+
+export const openAndClose = (posts_key, comment_key) =>  (dispatch) =>{
+    console.log(posts_key, comment_key)
 }

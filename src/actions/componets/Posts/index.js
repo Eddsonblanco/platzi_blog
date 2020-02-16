@@ -86,9 +86,17 @@ class Posts  extends Component {
     return this.newMethod(posts, posts_key);
 };
 
+  
 
     newMethod(posts, posts_key) {
-        return posts[posts_key].map((posts, comment_key) => (<div className='post_title' key={posts.id} onClick={() => this.props.displayComments(posts_key, comment_key, posts.comments)}>
+        return posts[posts_key].map((posts, comment_key) => (<div 
+            className='post_title' 
+            key={posts.id} 
+            onClick={
+                () => this.props.showUpComments(posts_key, comment_key, posts.comments)
+            }
+            >
+            
             <h2>
                 {posts.title}
             </h2>
@@ -96,16 +104,19 @@ class Posts  extends Component {
                 {posts.body}
             </h4>
             {
-                (posts.open) ? < Comments /> : ''
+                (posts.open) ? < Comments /> : 'close'
             }
         </div>));
     }
 
-    displayComments = (posts_key, comment_key, comments ) => {
+    showUpComments = (posts_key, comment_key, comments ) => {
+        console.log(this.props)
         this.props.openAndClose(posts_key, comment_key);
         this.props.getComments(posts_key, comment_key)
 
     }
+
+ 
 
     render() {
         console.log(this.props)

@@ -92,7 +92,6 @@ export const getComments = ( posts_key, comment_key ) => async (dispatch, getSta
         ...selected,
         comments: response.data
     };
-
     const updatedPosts = [ ...posts];
     updatedPosts[posts_key] = [
         ...posts[posts_key]

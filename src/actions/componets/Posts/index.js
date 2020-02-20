@@ -93,7 +93,7 @@ class Posts  extends Component {
             className='post_title' 
             key={posts.id} 
             onClick={
-                () => this.props.showUpComments(posts_key, comment_key, posts.comments)
+                () => this.showUpComments(posts_key, comment_key, posts.comments)
             }
             >
             
@@ -110,16 +110,18 @@ class Posts  extends Component {
     }
 
     showUpComments = (posts_key, comment_key, comments ) => {
-        console.log(this.props)
+       
         this.props.openAndClose(posts_key, comment_key);
-        this.props.getComments(posts_key, comment_key)
-
+        if(!comments.length){
+            this.props.getComments(posts_key, comment_key)
+        }
+        
     }
 
  
 
     render() {
-        console.log(this.props)
+        console.log(this)
         return (
             <div>
                 { this.writeUser() } 

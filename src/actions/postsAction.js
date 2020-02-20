@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { UPDATE, LOADING } from '../types/postsType'
+import { UPDATE, LOADING, ERROR, COM_ERROR, COM_LOADING } from '../types/postsType'
 import * as usersTypes from '../types/usersTypes'
 
 
@@ -51,7 +51,7 @@ export const getByUser = (key) => async (dispatch, getState) =>{
     } catch (error) {
         console.log(error.message);
         dispatch({
-            type: usersTypes.ERROR,
+            type: ERROR,
             payload: 'Sorry, Posts no available'
         })
     }
@@ -83,23 +83,36 @@ export const openAndClose = (posts_key, comment_key) =>  (dispatch, getState) =>
 }
 
 export const getComments = ( posts_key, comment_key ) => async (dispatch, getState) => {
+    dispatch({
+        type: COM_LOADING
+    })
     const { posts } = getState().postsReducers;
     const selected = posts[posts_key][comment_key];
 
-    const response = await axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${selected.id}`);
-    
-    const selectedUpdated = {
-        ...selected,
-        comments: response.data
-    };
-    const updatedPosts = [ ...posts];
-    updatedPosts[posts_key] = [
-        ...posts[posts_key]
-    ];
-    updatedPosts[posts_key][comment_key ] = selectedUpdated
+    try {
+        const response = await axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${selected.id}`);
+        
+        const selectedUpdated = {
+            ...selected,
+            comments: response.data
+        };
+        const updatedPosts = [ ...posts];
+        updatedPosts[posts_key] = [
+            ...posts[posts_key]
+        ];
+        updatedPosts[posts_key][comment_key ] = selectedUpdated
 
-    dispatch({
-        type:UPDATE,
-        payload: updatedPosts
-    })
+        dispatch({
+            type:UPDATE,
+            payload: updatedPosts
+        })
+    } catch (error) {
+        console.log(error.message);
+        dispatch({
+            type:  COM_ERROR,
+            payload: 'Comments no availables'
+        })
+    }
+
+    
 }

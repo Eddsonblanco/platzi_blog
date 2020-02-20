@@ -104,7 +104,7 @@ class Posts  extends Component {
                 {posts.body}
             </h4>
             {
-                (posts.open) ? < Comments /> : 'close'
+                (posts.open) ? < Comments comments={posts.comments} /> : 'close'
             }
         </div>));
     }
